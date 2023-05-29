@@ -9,3 +9,4 @@ Nest.JS 学习笔记
 - [Provider](/docs/provider.md)
 - [全局模块](/docs/global-module.md)
 - [生命周期](/docs/lifecycle.md)
+- [AOP](/docs/aop.md)
