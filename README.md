@@ -7,3 +7,4 @@ Nest.JS 学习笔记
 - [数据传输](/docs/data-transmission.md)
 - [IOC](/docs/ioc.md)
 - [Provider](/docs/provider.md)
+- [全局模块](/docs/global-module.md)
