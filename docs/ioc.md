@@ -8,7 +8,7 @@ IOC 常见的实现方式包括依赖注入（DI）和控制反转容器（IOC �
 
 ### Nest 中的 IOC
 
-#### Service
+#### Injectable
 
 Service 类上声明了 `@Injectable` ，表明这个类是可注入的，那么 Nest 就会把它放到 IOC 容器中。
 
@@ -29,10 +29,6 @@ export class AppController() {
   constructor(private readonly appService: AppService) {}
 }
 ```
-
-为什么 Controller 是单独的装饰器？
-
-因为 Service 是可以被注入，也可以注入到别的对象的，所以用 `@Injectable` 声明。而 Controller 只需要被注入，所以 Nest 单独给它提供了 `@Controller` 装饰器。
 
 #### Module
 
