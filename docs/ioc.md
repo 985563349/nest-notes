@@ -2,7 +2,7 @@
 
 Inverse Of Control（IOC），即控制反转，是一种设计模式，用于实现代码之间的松耦合。
 
-在传统的过程式编程中，代码通常按照一定的顺序、在一定的时机进行调用，也就是控制权通常由开发者手动控制。而 IOC 模式则是将控制权交给了框架或容器，由框架或容器自动执行模块的方法，模块对外部环境的依赖通过外部注入而不是自己创建，这样使模块之间的依赖更加灵活和可维护。
+在传统的过程式编程中，代码通常会按照一定的顺序、在一定的时机进行调用，也就是控制权通常由开发者手动控制。而 IOC 模式则是将控制权交给了框架或容器，由框架或容器自动执行代码，代码对外部环境的依赖通过外部注入而不是自己创建，这样使代码之间的依赖更加灵活和可维护。
 
 IOC 常见的实现方式包括依赖注入（DI）和控制反转容器（IOC 容器）。
 
@@ -10,20 +10,16 @@ IOC 常见的实现方式包括依赖注入（DI）和控制反转容器（IOC �
 
 #### Service
 
-Service 类上声明了`@Injectable`，表明这个类是可注入的，那么 Nest 就会把它放到 IOC 容器中。
+Service 类上声明了 `@Injectable` ，表明这个类是可注入的，那么 Nest 就会把它放到 IOC 容器中。
 
 ```typescript
 @Injectable()
-export class AppService {
-  getHello(): string {
-    return 'Hello World!';
-  }
-}
+export class AppService {}
 ```
 
 #### Controller
 
-Controller 类上声明了`@Controller`，表明这个类也是可注入的，Nest 也会把它放到 IOC 容器中。
+Controller 类上声明了 `@Controller` ，表明这个类是可以被注入的，Nest 也会把它放到 IOC 容器中。
 
 ```typescript
 import { AppService } from './AppService';
@@ -31,21 +27,16 @@ import { AppService } from './AppService';
 @Controller()
 export class AppController() {
   constructor(private readonly appService: AppService) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
 }
 ```
 
 为什么 Controller 是单独的装饰器？
 
-因为 Service 是可以被注入，也可以注入到别的对象的，所以用`@Injectable`声明。而 Controller 只需要被注入，所以 Nest 单独给它提供了`@Controller`装饰器。
+因为 Service 是可以被注入，也可以注入到别的对象的，所以用 `@Injectable` 声明。而 Controller 只需要被注入，所以 Nest 单独给它提供了 `@Controller` 装饰器。
 
 #### Module
 
-Module 类上声明了`@Module`，表面这个类是一个模块。Nest 使用模块来组织应用程序结构。
+Module 类上声明了 `@Module` ，表面这个类是一个模块。Nest 使用模块来组织应用程序结构。
 
 ```typescript
 import { AppController } from 'AppController';
@@ -98,13 +89,13 @@ Nest 这套 IOC 机制看似繁琐，但却解决了后端系统中对象依赖�
 
 这些对象往往有着错综复杂的关系，比如：Controller 依赖 Service 实现业务逻辑，Service 依赖 Repository 来做数据库操作，Repository 依赖 DataSource 来建立数据库连接，DataSource 又需要从 Config 中拿到用户名密码等信息。
 
-这就导致了创建这些对象是很复杂的，要理清它们之间的依赖关系，哪个先创建，哪个后创建。而且这些对象通常并不需要每次都 new 一个新的，也就是保持单例。
+这就导致了创建这些对象是很复杂的，要理清它们之间的依赖关系，哪个先创建，哪个后创建。而且这些对象通常并不需要每次都 new 一个新的，也就是要保持单例。
 
 这是后端系统都有的痛点问题，IOC 的出现就是为了解决这个问题。
 
-#### IOC 实现思路
+#### IOC 的实现思路
 
-IOC 有一个放置对象的容器，程序初始化时会扫描类上声明的依赖关系，然后把这些类都 new 一个实例放到容器里。创建实例时还会将依赖的实例注入进去。
+IOC 有一个放置对象的容器，程序初始化时会扫描类上声明的依赖关系，然后把这些类都 new 一个实例放到容器里。创建实例时还会将依赖项注入进去。
 
 这种依赖注入的方式叫做：Dependency Injection，简称 DI。
 
