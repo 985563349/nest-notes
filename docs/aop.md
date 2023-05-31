@@ -95,7 +95,7 @@ Guard 是守卫的意思，可以用于在调用某个 Controller 之前判断�
 ```typescript
 @Injectable()
 export class RolesGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable(boolean) {
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     return true;
   }
 }
@@ -213,7 +213,7 @@ ExceptionFilter 是异常过滤器的意思，可以对抛出的异常做处理�
 ```typescript
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentHost) {
+  catch(exception: HttpException, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();

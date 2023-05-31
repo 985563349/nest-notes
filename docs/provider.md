@@ -82,7 +82,7 @@ export class AppController {
 
 ### useValue
 
-除了指定类外，还可以直接指定一个值做为 provider，让 IOC 容器来注入。通过 provider 指定 token，通过 useValue 指定值。
+除了指定类外，还可以直接指定一个值作为 provider，让 IOC 容器来注入。通过 provider 指定 token，通过 useValue 指定值。
 
 ```typescript
 @Module({

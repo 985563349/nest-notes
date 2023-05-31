@@ -248,9 +248,9 @@ find(@Res() response: Response) {
 }
 ```
 
-注入 response 对象后，Nest 不会再把 handler 的返回值做为响应内容，可以手动返回响应。
+注入 response 对象后，Nest 不会再把 handler 的返回值作为响应内容，可以手动返回响应。
 
-也可以通过 `passthrough` 参数告诉 Nest 让它依旧把 handler 的返回值做为响应内容。
+也可以通过 `passthrough` 参数告诉 Nest 让它依旧把 handler 的返回值作为响应内容。
 
 ```typescript
 @Get()
