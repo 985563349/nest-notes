@@ -204,11 +204,11 @@ Nest 中内置了九个 Pipe：
 
 #### ExceptionFilter
 
-ExceptionFilter 可以对抛出的异常做处理，返回对应的响应。
+ExceptionFilter 是异常过滤器的意思，可以对抛出的异常做处理，返回对应的响应。
 
 ![ExceptionFilter](../assets/filter.png)
 
-ExceptionFilter 支持依赖注入，且必须实现 `ExceptionFilter` 接口。处理的异常类型必须通过 `@Catch` 装饰器声明。在拦截异常后，可以返回对应的响应，给用户更好的提示。
+异常过滤器支持依赖注入，且必须实现 `ExceptionFilter` 接口。处理的异常类型必须通过 `@Catch` 装饰器声明。在拦截异常后，可以返回对应的响应，给用户更好的提示。
 
 ```typescript
 @Catch(HttpException)
@@ -273,3 +273,5 @@ Middleware、Guard、Pipe、Interceptor、ExceptionFilter 都可以透明的添�
 这些切面逻辑执行的顺序关系大致如下：
 
 最先执行的是 Middleware，进入路由会先调用 Guard，判断是否有权限访问，然后会调用 Interceptor，对 Controller 前后扩展一些逻辑，在到达 Controller 之前，还会调用 Pipe 来对参数做校验和转换。所有的 HttpException 异常都会被 ExceptionFilter 处理，返回不同的响应。
+
+![AOP](../assets/aop2.png)

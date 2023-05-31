@@ -306,3 +306,86 @@ find() {}
 @Redirect('https://www.github.com')
 find() {}
 ```
+
+### 自定义装饰器
+
+装饰器本质上就是一个函数，这个函数可以在内部修改类的行为。
+
+```typescript
+// 可传递参数的装饰器本质上是一个高阶函数。
+const Roles = (...args: string[]) => SetMetadata('roles', args);
+
+@Controller()
+export class AppController {
+  @Get()
+  @Roles('admin')
+  @UseGuards(RolesGuard)
+  findAll() {}
+}
+```
+
+#### 参数装饰器
+
+Nest 提供了一个辅助方法 `createParamDecorator` 用来创建参数装饰器。
+
+```typescript
+export const User = createParamDecorator((data: unknown, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest();
+  return request.user;
+});
+
+@Get()
+findOne(@User() user: UserEntity) {}
+```
+
+自定义参数装饰器可以传递参数。
+
+```typescript
+export const User = createParamDecorator((data: string, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest();
+  const user = request.user;
+  return data ? user?.[data] : user;
+});
+
+@Get()
+findOne(@User('firstName') firstName: string) {}
+```
+
+也可以使用管道。
+
+```typescript
+@Get()
+findOne(
+  @User(new ValidationPipe({ validateCustomDecorators: true }))
+  user: UserEntity,
+  @User('age', new ParseIntPipe())
+  age: number
+) {}
+```
+
+> TIP: 自定义装饰器的首个参数如果是 Pipe，那么它不会被 `createParamDecorator` 的回调参数接收（内部对参数的类型做了判断）。
+
+> TIP: `ValidationPipe` 默认情况下不验证自定义参数装饰器，开启验证需要设置 `validateCustomDecorators` 选项为 `true` 。
+
+#### 装饰器组合
+
+组合多个装饰器，Nest 同样也提供了辅助方法 `applyDecorators` 。
+
+```typescript
+export function Auth(...roles: Role[]) {
+  return applyDecorators(
+    SetMetadata('roles', roles),
+    UseGuards(AuthGuard, RolesGuard),
+    ApiBearerAuth(),
+    ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  );
+}
+```
+
+使用组合装饰器，就有通过单个声明应用四个装饰器的效果。
+
+```typescript
+@Get('users')
+@Auth('admin')
+findAllUsers() {}
+```
