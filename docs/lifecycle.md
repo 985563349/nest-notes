@@ -1,8 +1,8 @@
 ## 生命周期
 
-### 启用
+### 启动
 
-Nest 在启动时会递归解析 Module 依赖，扫描其中的 provider、controller，注入它们的依赖。全部解析完后，才会监听网络端口，开始处理请求。
+Nest 在启动时会递归解析 Module，扫描其中的 provider、controller，注入它们所需的依赖。全部解析完后，才会监听网络端口，开始处理请求。
 
 在这个过程中，Nest 暴露了一些生命周期方法：
 
@@ -18,7 +18,7 @@ Nest 在启动时会递归解析 Module 依赖，扫描其中的 provider、cont
 
 在这个过程中，`onModuleInit`、`onApplicationBootstrap`都是可以实现的生命周期方法并且**支持异步**。
 
-Nest 提供了两个接口`OnModuleInit`和`OnApplicationBootstrap`，可以在 controller、service、module 里分别实现它：
+Nest 提供了两个接口`OnModuleInit`和`OnApplicationBootstrap`，可以在 controller、provider、module 里分别实现它：
 
 ```typescript
 @Controller()
@@ -94,7 +94,7 @@ Nest 应用销毁时也有同样的生命周期：
 
 在这个过程中，`onModuleDestroy`、`beforeApplicationShutdown`、`onApplicationShutdown`都是可以实现的生命周期方法并且**支持异步**。其中`beforeApplicationShutdown`中可以拿到 **signal（系统信号）**。
 
-Nest 提供了三个接口`OnModuleDestroy`、`BeforeApplicationShutdown`、`OnApplicationShutdown`，可以在 controller、service、module 中分别实现它：
+Nest 提供了三个接口`OnModuleDestroy`、`BeforeApplicationShutdown`、`OnApplicationShutdown`，可以在 controller、provider、module 中分别实现它：
 
 ```typescript
 @Controller()

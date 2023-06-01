@@ -10,7 +10,7 @@ IOC 常见的实现方式包括依赖注入（DI）和控制反转容器（IOC �
 
 #### Injectable
 
-Service 类上声明了 `@Injectable` ，表明这个类是可注入的，那么 Nest 就会把它放到 IOC 容器中。
+Service 类上声明了 `@Injectable` ，表明这个类是可以被注入的，那么 Nest 就会把它放到 IOC 容器中。
 
 ```typescript
 @Injectable()
@@ -19,7 +19,7 @@ export class AppService {}
 
 #### Controller
 
-Controller 类上声明了 `@Controller` ，表明这个类是可以被注入的，Nest 也会把它放到 IOC 容器中。
+Controller 类上声明了 `@Controller` ，表明这个类是一个控制器（控制器也是可以被注入的），Nest 也会把它放到 IOC 容器中。
 
 ```typescript
 import { AppService } from './AppService';
@@ -81,17 +81,17 @@ Nest 这套 IOC 机制看似繁琐，但却解决了后端系统中对象依赖�
 - Service：实现业务逻辑。
 - Repository：实现数据操作。
 
-此外还有数据库连接对象`DataSource`，配置对象`Config`等等。
+此外还有数据库连接对象 DataSource，配置对象 Config 等等。
 
 这些对象往往有着错综复杂的关系，比如：Controller 依赖 Service 实现业务逻辑，Service 依赖 Repository 来做数据库操作，Repository 依赖 DataSource 来建立数据库连接，DataSource 又需要从 Config 中拿到用户名密码等信息。
 
-这就导致了创建这些对象是很复杂的，要理清它们之间的依赖关系，哪个先创建，哪个后创建。而且这些对象通常并不需要每次都 new 一个新的，也就是要保持单例。
+这就导致了创建这些对象实际是很复杂的，要理清它们之间的依赖关系，哪个先创建，哪个后创建。而且这些对象通常并不需要每次都创建一个新的，也就是要保持单例。
 
 这是后端系统都有的痛点问题，IOC 的出现就是为了解决这个问题。
 
 #### IOC 的实现思路
 
-IOC 有一个放置对象的容器，程序初始化时会扫描类上声明的依赖关系，然后把这些类都 new 一个实例放到容器里。创建实例时还会将依赖项注入进去。
+IOC 有一个放置对象的容器，程序初始化时会扫描类上声明的依赖关系，然后把这些类都创建一个实例放到容器里。创建实例时还会将依赖项注入进去。
 
 这种依赖注入的方式叫做：Dependency Injection，简称 DI。
 

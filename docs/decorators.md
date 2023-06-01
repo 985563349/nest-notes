@@ -56,7 +56,7 @@ export class AppController {
 
 #### @Optional
 
-声明依赖位可选，默认情况下声明的依赖没有注入，创建对象时会报错。
+声明依赖为可选，默认情况下声明的依赖容器中不存在，创建对象时会报错。
 
 ```typescript
 @Controller()
@@ -119,7 +119,8 @@ export class AppController {}
 @Controller()
 export class AppController {
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {}
+  @UsePipes(ValidationPipe)
+  findOne(@Param('id') id: number) {}
 }
 ```
 
@@ -186,7 +187,7 @@ export class RolesGuard {
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const classMetadata = this.reflector.get('roles', context.getClass());
-    const methodMetadata = this.reflector.get('roles', context.gethandlerr());
+    const handlerMetadata = this.reflector.get('roles', context.getHandler());
     return true;
   }
 }
@@ -239,7 +240,7 @@ find(@Req() req: Request) {}
 
 #### @Res
 
-获取 response 对象，`@Response` 是它的别名。
+获取 response 对象，`@Response` 是它的别名。注入 response 对象后，Nest 不会再把 handler 的返回值作为响应内容，可以手动返回响应。
 
 ```typescript
 @Get()
@@ -248,9 +249,7 @@ find(@Res() response: Response) {
 }
 ```
 
-注入 response 对象后，Nest 不会再把 handler 的返回值作为响应内容，可以手动返回响应。
-
-也可以通过 `passthrough` 参数告诉 Nest 让它依旧把 handler 的返回值作为响应内容。
+也可以通过 `passthrough` 参数告诉 Nest 依旧把 handler 的返回值作为响应内容。
 
 ```typescript
 @Get()
@@ -313,7 +312,7 @@ find() {}
 
 ```typescript
 // 可传递参数的装饰器本质上是一个高阶函数。
-const Roles = (...args: string[]) => SetMetadata('roles', args);
+const Roles = (...roles: string[]) => SetMetadata('roles', roles);
 
 @Controller()
 export class AppController {

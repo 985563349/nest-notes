@@ -4,13 +4,13 @@ Nest 使用的是 MVC 架构。在 MVC 架构下，请求会先发送给 Control
 
 ![MVC](../assets/mvc.png)
 
-在这个流程中，Nest 提供了 AOP 的能力。
+在这个流程中，Nest 还提供了 AOP 的能力。
 
-Nest 在调用 Controller 之前和之后增加了执行通用逻辑的阶段。如果要在调用链路里加一段通用逻辑（比如：日志、权限、异常处理等），就可以在这个阶段去执行。
+Nest 在调用 Controller 之前和之后增加了执行通用逻辑的阶段。如果要在调用链路里加一段通用逻辑（比如：日志、权限、异常处理等），就可以在这个阶段去添加。
 
 ![AOP](../assets/aop.png)
 
-这种横向扩展点就叫做切面，能透明的加入切面逻辑的编程方式就叫 AOP（面向切面编程）。
+这种横向的扩展点就叫做切面，能透明的加入切面逻辑的编程方式就叫 AOP（面向切面编程）。
 
 AOP 的好处是可以把一些通用逻辑分离到切面中，保持业务逻辑的存粹性，这样切面逻辑可以复用，还可以动态的增删。
 
@@ -24,7 +24,7 @@ Nest 的底层是 Express，自然也可以使用中间件，但是做了进一�
 
 ![Middleware](../assets/middleware.png)
 
-通过类定义的中间件支持依赖注入，且必须实现 `NestMiddleware` 接口。
+通过类定义的中间件支持依赖注入，需要实现 `NestMiddleware` 接口。
 
 ```typescript
 import { Request, Response, NextFunction } from 'express';
@@ -88,7 +88,7 @@ Guard 是守卫的意思，可以用于在调用某个 Controller 之前判断�
 
 ![Guard](../assets/guard.png)
 
-守卫支持依赖注入，且必须实现 `CanActivate` 接口。
+守卫支持依赖注入，需要实现 `CanActivate` 接口。
 
 守卫方法 `canActivate` 中可以通过 `context` 参数拿到请求信息，然后做一些权限验证等处理之后返回 true 或者 false。
 
@@ -124,7 +124,7 @@ Interceptor 是拦截器的意思，可以在目标 Controller 方法前后加�
 
 ![Interceptor](../assets/interceptor.png)
 
-拦截器支持依赖注入，且必须实现 `NestInterceptor` 接口。拦截器方法 `intercept` 中调用 `next.handle` 就会调用目标 Controller。
+拦截器支持依赖注入，需要实现 `NestInterceptor` 接口。拦截器方法 `intercept` 中调用 `next.handle` 就会调用目标 Controller。
 
 ```typescript
 @Injectable()
@@ -161,7 +161,7 @@ Pipe 是管道的意思，用来对参数做一些检验和转换。
 
 ![Pipe](../assets/pipe.png)
 
-管道支持依赖注入，且必须实现 `PipeTransform` 接口。管道的 `transform` 方法中可以对传入的参数值做参数验证，比如格式、类型是否正确，不正确就抛出异常。也可以做转换，返回转换后的值。
+管道支持依赖注入，需要实现 `PipeTransform` 接口。管道的 `transform` 方法中可以对传入的参数值做参数验证，比如格式、类型是否正确，不正确就抛出异常。也可以做转换，返回转换后的值。
 
 ```typescript
 @Injectable()
@@ -208,7 +208,7 @@ ExceptionFilter 是异常过滤器的意思，可以对抛出的异常做处理�
 
 ![ExceptionFilter](../assets/filter.png)
 
-异常过滤器支持依赖注入，且必须实现 `ExceptionFilter` 接口。处理的异常类型必须通过 `@Catch` 装饰器声明。在拦截异常后，可以返回对应的响应，给用户更好的提示。
+异常过滤器支持依赖注入，需要实现 `ExceptionFilter` 接口。处理的异常类型可以通过 `@Catch` 装饰器声明，如果不声明默认拦截所有异常类型。在拦截到异常后，可以返回对应的响应，给用户更好的提示。
 
 ```typescript
 @Catch(HttpException)
@@ -247,7 +247,7 @@ create(@Body() createCatDto: CreateCatDto) {
 }
 ```
 
-Nest 中内置了一组继承 `HttpException` 的异常：
+Nest 中内置了一组继承自 `HttpException` 的异常：
 
 - BadRequestException
 - UnauthorizedException

@@ -2,22 +2,19 @@
 
 ### useClass
 
-使用类来创建 provider，通常是用 `@Injectable` 装饰一个类，然后在 Module 的 providers 里声明。
+provider 需要在 Module 的 providers 里声明。使用类创建的 provider 通过 provide 指定注入的 token，通过 useClass 指定注入的类。
 
 ```typescript
-// service
-@Injectable()
 export class AppService {
   getHello(): string {
     return 'Hello World!';
   }
 }
 
-// module
 @Module({
   imports: [],
   controllers: [AppController],
-  providers: [APpService],
+  providers: [AppService],
 })
 export class AppModule {}
 ```
@@ -25,7 +22,6 @@ export class AppModule {}
 其实这是一种简写，完整的写法是这样的：
 
 ```typescript
-// 创建 provider
 @Module({
   imports: [],
   controllers: [AppController],
@@ -37,15 +33,16 @@ export class AppModule {}
   ],
 })
 export class AppModule {}
+```
 
-// 注入
+Nest 会自动对 provider 做实例化再注入到可注入类中。
+
+```typescript
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
 }
 ```
-
-通过 provide 指定注入的 token，通过 useClass 指定注入的类，Nest 会自动对它做实例化再注入。
 
 如果不想用构造器注入，也可以用属性注入，通过 `@Inject` 指定注入的 provider 的 token 即可。
 
@@ -78,11 +75,11 @@ export class AppController {
 }
 ```
 
-如果 token 是字符串，注入时需要用 `@Inject` 手动指定注入对象的 token。相比之下，使用类做 token 可以省去 `@Inject` ，比较简便，所以更推荐使用。
+如果 token 是字符串，注入时必须使用 `@Inject` 手动指定注入对象的 token。相比之下，使用类做 token 可以省去 `@Inject` ，比较简便，所以更推荐使用。
 
 ### useValue
 
-除了指定类外，还可以直接指定一个值作为 provider，让 IOC 容器来注入。通过 provider 指定 token，通过 useValue 指定值。
+除了指定类外，还可以直接指定一个值作为 provider 让 IOC 容器来注入。通过 provider 指定 token，通过 useValue 指定值。
 
 ```typescript
 @Module({
@@ -108,7 +105,7 @@ export class AppController {
 
 ### useFactory
 
-provider 的值有时可能是动态产生的，Nest 同样也能支持：
+provider 的值有时可能是动态产生的，Nest 同样也能支持。
 
 ```typescript
 @Module({
@@ -217,4 +214,4 @@ export class AppController {
 }
 ```
 
-上述示例中就是给 user 起了一个别名 person, 然后就可以用这个新的 token 来注入了。
+示例中就是给 user 起了一个别名 person，然后就可以用这个新的 token 去注入了。

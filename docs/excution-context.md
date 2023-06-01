@@ -6,9 +6,9 @@ Nest 支持创建 HTTP 服务、WebSocket 服务，还有基于 TCP 通信的微
 
 ### ArgumentsHost
 
-`ArgumentsHost` 类提供了获取传递给处理程序的参数。它允许选择合适的上下文来从框架中获取参数。Nest 提供了 `ArgumentsHost` 的实例，作为 `host` 参数提供给需要获取的地方。例如，异常过滤器中的 `catch` 方法。
+`ArgumentsHost` 类提供了传递给处理程序的参数。它允许选择合适的上下文来获取参数。Nest 提供了 `ArgumentsHost` 的实例给需要获取的地方。例如，异常过滤器中的 `catch` 方法。
 
-`host` 参数的 `getType` 方法可以用来确定当前运行的应用程序类型。
+`getType` 方法可以用来确定当前运行的应用程序类型。
 
 ```typescript
 @Catch()
@@ -25,7 +25,7 @@ export class AllExceptionFilter implements ExceptionFilter {
 }
 ```
 
-获取当前上下文参数，使用 `host` 参数的 `getArgs` 方法。不同的服务类型下，可以获取到不同的参数。
+`getArgs` 方法可以获取当前上下文参数。不同的服务类型下，可以获取到不同的参数。
 
 例如，在 `HTTP` 服务下，可以获取到 `req`、`res` 和 `next`。
 
@@ -33,7 +33,7 @@ export class AllExceptionFilter implements ExceptionFilter {
 const [req, res, next] = host.getArgs();
 ```
 
-但这种方式会使应用和特定上下文耦合，更推荐的方法是使用 `host` 参数的应用方法来选择合适的应用上下文。
+但 `getArgs` 会使应用程序与特定上下文耦合，更推荐的方法是使用应用方法来选择合适的应用上下文。
 
 ```typescript
 // HttpArgumentsHost
@@ -48,11 +48,11 @@ host.switchToRpc();
 
 ### ExecutionContext
 
-`ExecutionContext` 扩展了 `ArgumentsHost`，提供额外的当前运行线程信息。
+`ExecutionContext` 继承自 `ArgumentsHost`，提供了当前运行过程的额外信息。
 
 ![ExecutionContext](../assets/excution-context.png)
 
-Nest 提供了 `ExecutionContext` 的实例，作为 `context` 参数提供给需要获取的地方。例如，守卫中的 `canActivate` 方法和拦截器中的 `intercept` 方法。
+Nest 提供了 `ExecutionContext` 的实例给需要获取的地方。例如，守卫中的 `canActivate` 方法和拦截器中的 `intercept` 方法。
 
 ```typescript
 export class RolesGuard implements CanActivate {
@@ -70,4 +70,33 @@ export class LoggingInterceptor implements NestInterceptor {
 }
 ```
 
-`ExecutionContext` 扩展的 `getClass` 和 `getHandler` 方法可以获取到当前的 class 和 handler。这就为守卫和拦截器提供了极高的灵活性。
+`ExecutionContext` 扩展的 `getClass` 和 `getHandler` 方法可以获取到当前的 class 和 handler。这为守卫和拦截器提供了极高的灵活性。最重要的是，可以从内部访问到控制器上设置的自定义元数据。
+
+```typescript
+// 在控制器中直接实用SetMetadata并不是好的做法，推荐创建一个自定义装饰器。
+const Roles = (...roles: string[]) => @SetMetadata('roles', roles)
+
+@Controller()
+@Roles('user')
+@UseGuards(RolesGuard)
+export class AppController {
+  @Get()
+  @Roles('admin')
+  getHello() {}
+}
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private readonly reflector: Reflector){}
+
+  canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+    const classMetadata = this.reflector.get('roles', context.getClass());
+    const handlerMetadata = this.reflector.get('roles', context.getHandler());
+
+    // 优先从 handler 中获取元数据，若 handler 上不存在，使用 class 上的元数据进行覆盖。
+    const roles = this.reflector.getAllAndOverride('roles', [context.getHandler(), context.getClass()]); // => ['admin']
+    // 合并 handler 和 class 上的元数据
+    const roles2 = this.reflector.getAllAndMerge('roles', [context.getHandler(), context.getClass()]); // => ['user', 'admin']
+  }
+}
+```
