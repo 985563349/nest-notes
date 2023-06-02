@@ -13,3 +13,4 @@ Nest.JS 学习笔记
 - [装饰器](/docs/decorators.md)
 - [执行上下文](/docs/excution-context.md)
 - [循环依赖](/docs/circular-dependency.md)
+- [动态模块](/docs/dynamic-module.md)
