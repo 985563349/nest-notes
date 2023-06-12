@@ -47,19 +47,19 @@ const query = queryString.stringify({ name: '王花花', age: 24 });
 
 #### Form URLEncoded
 
-前端使用 form 表单提交的数据就是这种格式，它与 query 字符串类似，区别在于 form urlencoded 是放在请求体里，并且指定了请求头参数：**content-type: application/x-www-form-urlencoded**。
+前端使用 form 表单提交的数据就是这种格式，它与 query 字符串类似，区别在于 form urlencoded 是放在请求体里，并且指定了请求头参数 **content-type: application/x-www-form-urlencoded**。
 
 由于内容也是 query 字符串，所以对特殊字符也需要进行编码。
 
 #### Form Data
 
-form data 通常用于做文件传输。 请求头参数 **content-type** 会定义数据格式为 **multipart/form-data**，以及数据的分隔符 （boundary，由短横线加数字组成的字符串）。
+form data 通常用于做文件传输。 请求头参数 **content-type** 会定义数据格式为： **multipart/form-data**，以及数据的分隔符 （boundary，由短横线加数字组成的字符串）。
 
 #### JSON
 
 form urlencoded 会对内容进行编码，form data 会增加 boundary 导致请求体积增大，如果只是传输简单数据，推荐使用 json。
 
-传输 json 数据时，需要指定请求头参数**content-type: application/json**。
+传输 json 数据时，需要指定请求头参数 **content-type: application/json**。
 
 ---
 
