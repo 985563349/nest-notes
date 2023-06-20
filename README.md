@@ -16,6 +16,7 @@ Nest.JS 学习笔记
 - [执行上下文](/docs/excution-context.md)
 - [循环依赖](/docs/circular-dependency.md)
 - [动态模块](/docs/dynamic-module.md)
+- [Fastify](/docs/fastify.md)
 
 ### MySQL
 
