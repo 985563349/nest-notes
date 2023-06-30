@@ -32,9 +32,9 @@ docker run -itd --name hello-mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -v
 
 参数说明：
 
-- **-p 3306:3306**：映射容器服务的 3306 端口到宿主机的 3306 端口。
-- **-e MYSQL_ROOT_PASSWORD=123456**：指定容器服务的环境变量，用于设置 MySQL 服务 root 用户的密码。
-- **-v /var/lib/mysql:/var/lib/mysql**：将本地目录作为数据卷挂载到容器。
+- **-p**：映射容器的端口到宿主机端口。
+- **-e**：指定容器服务的环境变量，用于设置 MySQL 服务 root 用户的密码。
+- **-v**：将本地目录作为数据卷挂载到容器。
 
 #### 连接 MySQL
 
