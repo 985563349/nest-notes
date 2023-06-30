@@ -62,18 +62,18 @@ export interface ConfigModuleOptions {
 export const { ConfigurableModuleClass, MODULE_OPTIONS_TOKEN } =
   new ConfigurableModuleBuilder<ConfigModuleOptions>().build();
 
+// config.service.ts
+@Injectable()
+export class ConfigService {
+  constructor(@Inject(MODULE_OPTIONS_TOKEN) private readonly options: ConfigModuleOptions) {}
+}
+
 // config.module.ts
 @Module({
   providers: [ConfigService],
   exports: [ConfigService],
 })
 export class ConfigModule extends ConfigurableModuleClass {}
-
-// config.service.ts
-@Injectable()
-export class ConfigService {
-  constructor(@Inject(MODULE_OPTIONS_TOKEN) private readonly options: ConfigModuleOptions) {}
-}
 ```
 
 `ConfigurableModuleBuilder` 生成一个类，这个类默认提供了 `register` 和 `registerAsync` 两个静态方法。还有一个模块配置参数的 provider token。

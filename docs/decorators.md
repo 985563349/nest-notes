@@ -70,7 +70,7 @@ export class AppController {
 为异常过滤器指定捕获的异常类型，未指定默认捕获所有异常类型。
 
 ```typescript
-@Catch()
+@Catch(HttpException)
 export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {}
 }
@@ -306,6 +306,20 @@ find() {}
 find() {}
 ```
 
+#### @Global
+
+定义全局模块。
+
+```typescript
+@Global()
+@Module({
+  controllers: [GlobalController],
+  providers: [GlobalService],
+  exports: [GlobalService],
+})
+export class GlobalModule {}
+```
+
 ### 自定义装饰器
 
 装饰器本质上就是一个函数，这个函数可以在内部修改类的行为。
@@ -362,9 +376,9 @@ findOne(
 ) {}
 ```
 
-> TIP: 自定义装饰器的首个参数如果是 Pipe，那么它不会被 `createParamDecorator` 的回调参数接收（内部对参数的类型做了判断）。
+自定义装饰器的首个参数如果是 Pipe，那么它不会被 `createParamDecorator` 的回调参数接收（内部对参数的类型做了判断）。
 
-> TIP: `ValidationPipe` 默认情况下不验证自定义参数装饰器，开启验证需要设置 `validateCustomDecorators` 选项为 `true` 。
+`ValidationPipe` 默认情况下不验证自定义参数装饰器，开启验证需要设置 `validateCustomDecorators` 选项为 `true` 。
 
 #### 装饰器组合
 
