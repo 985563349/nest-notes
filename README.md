@@ -17,7 +17,10 @@ Nest.JS 学习笔记
 - [循环依赖](/docs/circular-dependency.md)
 - [动态模块](/docs/dynamic-module.md)
 - [Fastify](/docs/fastify.md)
+- [参数校验](/docs/validation.md)
+- [Swagger](/docs/swagger.md)
 
 ### MySQL
 
-- [MySQL 基础](/docs/mysql-basic.md)
+- [安装](/docs/mysql-install.md)
+- [基础命令](/docs/mysql-basic.md)
