@@ -4,40 +4,40 @@
 
 前后端数据传输的格式主要有五种：
 
-- URL Param
-- Query
+- 路径参数
+- Query String
 - Form URLEncoded
 - Form Data
 - JSON
 
-#### URL Param
+#### 路径参数
 
-将参数写在 url 中，例如：
+将参数写在 URL 中，例如：
 
 ```ini
 http://localhost:8080/api/person/1
 ```
 
-url 中的 1 就是路径参数（url param），服务端框架和单页应用的路由系统都支持从 url 中读取参数。
+URL 中的数字 1 就是路径参数，服务端框架和单页应用的路由系统都支持从 URL 中读取参数。
 
-#### Query
+#### Query String
 
-通过 url 中 **?** 后面的用 **&** 分隔的字符串传递数据，例如：
+通过使用问号 (?) 将参数附加到 URL 末尾，并使用(&) 符号分隔不同的参数，例如：
 
 ```ini
 http://localhost:8080/api/person?name=jee&age=24
 ```
 
-url 中的 name 和 age 就是 query 传递的参数，其中非英文的字符和一些特殊字符需要进行编码。
+URL 中的 name=jee 和 age=24 就是传递的参数。参数值中非英文的字符和一些特殊字符需要进行编码。
 
-可以使用 `encodeURIComponent` 方法来编码：
+使用 `encodeURIComponent` 方法进行编码：
 
 ```javascript
 const query = '?name=' + encodeURIComponent('王花花') + '&age=' + encodeURIComponent(24);
 // => '?name=%E7%8E%8B%E8%8A%B1%E8%8A%B1&age=24'
 ```
 
-也可以使用第三方库 `query-string` 来处理：
+也可以使用第三方库 `query-string` ：
 
 ```javascript
 const queryString = require('query-string');
@@ -47,43 +47,39 @@ const query = queryString.stringify({ name: '王花花', age: 24 });
 
 #### Form URLEncoded
 
-前端使用 form 表单提交的数据就是这种格式，它与 query 字符串类似，区别在于 form urlencoded 是放在请求体里，并且指定了请求头参数 **content-type: application/x-www-form-urlencoded**。
-
-由于内容也是 query 字符串，所以对特殊字符也需要进行编码。
+前端使用 Form 表单提交的数据就是这种格式，它与 Query String 类似（数据格式与编码方式相同），区别在于 Form URLEncoded 的数据是放在请求体里，并且需要指定请求头参数 `Content-Type` 为 `application/x-www-form-urlencoded`。
 
 #### Form Data
 
-form data 通常用于做文件传输。 请求头参数 **content-type** 会定义数据格式为： **multipart/form-data**，以及数据的分隔符 （boundary，由短横线加数字组成的字符串）。
+Form Data 通常用来做文件传输。 请求头参数 **Content-Type** 会定义数据格式为： **multipart/form-data**，以及数据的分隔符 （boundary，由短横线加数字组成的字符串）。
 
 #### JSON
 
-form urlencoded 会对内容进行编码，form data 会增加 boundary 导致请求体积增大，如果只是传输简单数据，推荐使用 json。
+Form URLEncoded 会对内容进行编码，Form Data 会增加 boundary 导致请求体积增大，如果只是传输简单数据，推荐使用 JSON。
 
-传输 json 数据时，需要指定请求头参数 **content-type: application/json**。
-
----
+传输 JSON 数据时，需要指定请求头参数 **Content-Type: application/json**。
 
 ### Nest 接收数据
 
-#### URL Param
+#### 路径参数
 
-url 中的参数，Nest 里通过`@Param`装饰器来注入。
+路径中的参数，Nest 可以通过 `@Param` 来接收。
 
 ```typescript
 @Controller('api/person')
 export class PersonController {
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return `received: id =${id}`;
+    return `received: id = ${id}`;
   }
 }
 ```
 
-`@Controller('api/person')`定义的路由和`@Get(':id')`定义的路由会拼接在一起，即只有路径为 `/api/person/xxx` 的 GET 请求才会调用这个函数。
+`@Controller('api/person')` 定义的路由和 `@Get(':id')` 定义的路由会拼接在一起，即只有路径为 `/api/person/xxx` 的 GET 请求才会调用这个函数。
 
-#### Query
+#### Query String
 
-url 中的 query 字符串会做编码，在 Nest 里通过`@Query`装饰器来注入。
+Query String 会对数据内容做编码，Nest 里通过 `@Query` 来接收，装饰器会自动进行解码。
 
 ```typescript
 @Controller('api/person')
@@ -97,9 +93,9 @@ export class PersonController {
 
 #### Form URLEncoded
 
-form urlencoded 将数据放在了请求体中，并且做了编码，Nest 接受需要使用`@Body`装饰器。同时 Nest 还会解析请求体，并注入到 dto 中。
+Form URLEncoded 将数据放在了请求体中，Nest 里通过 `@Body` 来接收。同时 Nest 还会解析请求体，并注入到 DTO 中。
 
-dto（data transfer object） 用于封装传输数据的对象。
+DTO（data transfer object） 用于封装传输数据的对象。
 
 ```typescript
 // create-person.dto.ts
@@ -122,7 +118,9 @@ export class PersonController {
 
 #### Form Data
 
-Nest 解析 form data 需要用到 `AnyFilesInterceptor`拦截器，再通过`@UseInterceptors`装饰器来启用拦截器。文件内容通过`@UploadedFiles`装饰器注入，非文件内容通过`@Body`装饰器注入。
+Nest 解析 Form Data 需要使用 `AnyFilesInterceptor` 拦截器，再通过 `@UseInterceptors` 装饰器来启用拦截器。
+
+文件内容通过 `@UploadedFiles` 来接收，非文件内容通过 `@Body` 来接收。
 
 ```typescript
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
@@ -139,11 +137,11 @@ export class PersonController () {
 }
 ```
 
-> TIP: 类型`Express.Multer.File`依赖于第三方包`@types/multer`。
+类型 `Express.Multer.File` 依赖于第三方包 `@types/multer` 。
 
 #### JSON
 
-Nest 接收 form urlencoded 和 json 都使用`@Body`装饰器，Nest 的内部会根据请求头参数 **content-type** 来选择不同的解析方式。
+Nest 接收 Form URLEncoded 和 JSON 都使用 `@Body`，Nest 的内部会根据请求头参数 **Content-Type** 来选择不同的解析方式。
 
 ```typescript
 import { CreatePersonDto } from './dto/create-person.dot';
